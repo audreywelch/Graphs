@@ -32,7 +32,27 @@ class Graph:
         Print each vertex in breadth-first order
         beginning from starting_vertex.
         """
-        pass  # TODO
+        # Create an empty Queue
+        q = Queue()
+        # Create an empty visited set
+        visited_set = set()
+
+        # Add the starting vertex to the queue
+        q.enqueue(starting_vertex)
+
+        # While the queue is not empty...
+        while q.size() > 0:
+            # Dequeue the first vertex
+            first_vertex = q.dequeue()
+
+            # If it has not been visited...
+            if first_vertex not in visited_set:
+                # Mark it as visited (print it and add it to the visited set)
+                print(first_vertex)
+                visited_set.add(first_vertex)
+                # Then enqueue each of its neighbors in the queue
+                for neighbor in self.vertices[first_vertex]:
+                    q.enqueue(neighbor)
 
     ## Part 3: Implement Depth-First Traversal with a Stack
     def dft(self, starting_vertex):
