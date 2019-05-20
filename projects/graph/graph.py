@@ -42,7 +42,7 @@ class Graph:
 
         # While the queue is not empty...
         while q.size() > 0:
-            # Dequeue the first vertex
+            # Dequeue the first vertex - take from the front of the array: vertices[0]
             first_vertex = q.dequeue()
 
             # If it has not been visited...
@@ -60,7 +60,28 @@ class Graph:
         Print each vertex in depth-first order
         beginning from starting_vertex.
         """
-        pass  # TODO
+        # All we have to do is change the data structure from a queue to a stack
+        # Create an empty Stack
+        s = Stack()
+
+        # Create an empty Visited set
+        visited_set = set()
+
+        # Push the starting vertex to the stack
+        s.push(starting_vertex)
+
+        # While the Stack is not empty...
+        while s.size() > 0:
+            # Pop the last vertex - take from the back of the array, the most recently added, which is what makes it go deep instead of wide: vertices[-1]
+            last_vertex = s.pop()
+            # If it has not been visited...
+            if last_vertex not in visited_set:
+                # Mark it as visited (print it and add it to the visited set)
+                print(last_vertex)
+                visited_set.add(last_vertex)
+                # Then push each of its neighbors in the stack
+                for neighbor in self.vertices[last_vertex]:
+                    s.push(neighbor)
 
     ## Part 3.5: Implement Depth-First Traversal using Recursion
     def dft_recursive(self, starting_vertex):
