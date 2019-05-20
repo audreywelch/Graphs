@@ -73,24 +73,35 @@ class Graph:
         # While the Stack is not empty...
         while s.size() > 0:
             # Pop the last vertex - take from the back of the array, the most recently added, which is what makes it go deep instead of wide: vertices[-1]
-            last_vertex = s.pop()
+            vertex = s.pop()
             # If it has not been visited...
-            if last_vertex not in visited_set:
+            if vertex not in visited_set:
                 # Mark it as visited (print it and add it to the visited set)
-                print(last_vertex)
-                visited_set.add(last_vertex)
+                print(vertex)
+                visited_set.add(vertex)
                 # Then push each of its neighbors in the stack
-                for neighbor in self.vertices[last_vertex]:
+                for neighbor in self.vertices[vertex]:
                     s.push(neighbor)
 
     ## Part 3.5: Implement Depth-First Traversal using Recursion
-    def dft_recursive(self, starting_vertex):
+    def dft_recursive(self, starting_vertex, visited_set = None):
         """
         Print each vertex in depth-first order
         beginning from starting_vertex.
         This should be done using recursion.
         """
-        pass  # TODO
+        # Need to do this because if we set it in the parameter as a default, it actually persists and then will only run once
+        if visited_set is None:
+            visited_set = set()
+        # Mark the starting vertex as visited
+        print(starting_vertex)
+        visited_set.add(starting_vertex)
+
+        # Call DFT_Recursive on each unvisited neighbor
+        for neighbor in self.vertices[starting_vertex]:
+            if neighbor not in visited_set:
+                self.dft_recursive(neighbor, visited_set)
+
 
     ## Part 4: Implement Breadth-First Search
     def bfs(self, starting_vertex, destination_vertex):
