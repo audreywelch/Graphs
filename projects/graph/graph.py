@@ -3,6 +3,7 @@ Simple graph implementation
 """
 from util import Stack, Queue  # These may come in handy
 
+## Part 1: Create a Graph Class
 class Graph:
     """Represent a graph as a dictionary of vertices mapping labels to edges."""
     def __init__(self):
@@ -17,18 +18,24 @@ class Graph:
         Add a directed edge to the graph.
         """
         pass  # TODO
+
+    ## Part 2: Implement Breadth-First Traversal
     def bft(self, starting_vertex):
         """
         Print each vertex in breadth-first order
         beginning from starting_vertex.
         """
         pass  # TODO
+
+    ## Part 3: Implement Depth-First Traversal with a Stack
     def dft(self, starting_vertex):
         """
         Print each vertex in depth-first order
         beginning from starting_vertex.
         """
         pass  # TODO
+
+    ## Part 3.5: Implement Depth-First Traversal using Recursion
     def dft_recursive(self, starting_vertex):
         """
         Print each vertex in depth-first order
@@ -36,6 +43,8 @@ class Graph:
         This should be done using recursion.
         """
         pass  # TODO
+
+    ## Part 4: Implement Breadth-First Search
     def bfs(self, starting_vertex, destination_vertex):
         """
         Return a list containing the shortest path from
@@ -43,6 +52,8 @@ class Graph:
         breath-first order.
         """
         pass  # TODO
+
+    ## Implement Depth-First Search
     def dfs(self, starting_vertex, destination_vertex):
         """
         Return a list containing a path from
