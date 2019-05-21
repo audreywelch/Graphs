@@ -108,9 +108,45 @@ class Graph:
         """
         Return a list containing the shortest path from
         starting_vertex to destination_vertex in
-        breath-first order.
+        breath-first order. (Guaranteed to give you the shortest path)
         """
-        pass  # TODO
+        # Create an empty Queue
+        q = Queue()
+        
+        # enqueue A PATH TO the starting_vertex
+        q.enqueue([starting_vertex])
+
+        # Create an empty visited set to store visited vertices
+        visited_set = set()
+
+        # While the queue is not empty...
+        while q.size() > 0:
+            # Dequeue the first PATH from the front of the array
+            path = q.dequeue()
+
+            # Grab the last vertex from the PATH
+            vertex = path[-1] # vertex is the last thing in the path array
+
+            # If it has not been visited...
+            if vertex not in visited_set:
+                # Check if vertex is the destination we're searching for
+                if vertex == destination_vertex:
+                    return path
+                # Mark it as visited (print and add it to the visited set)
+                print(vertex)
+                visited_set.add(vertex)
+                # Then enqueue each of its neighbors in the queue
+                for neighbor in self.vertices[vertex]:
+                    new_path = list(path)
+                    new_path.append(neighbor)
+                    q.enqueue(neighbor)
+        return None
+
+    """
+    Instead of storing just the nodes when you enque, you could enqueue the path.
+    OR everytime you visit a node, keep track of its parent. Then when you get to the destination, trace backwards.
+
+    """
 
     ## Implement Depth-First Search
     def dfs(self, starting_vertex, destination_vertex):
@@ -119,7 +155,32 @@ class Graph:
         starting_vertex to destination_vertex in
         depth-first order.
         """
-        pass  # TODO
+        # Create an empty Stack
+        s = Stack()
+
+        # Create an empty Visited set
+        visited_set = set()
+
+        # Push the starting vertex to the stack
+        s.push([starting_vertex])
+
+        # While the Stack is not empty...
+        while s.size() > 0:
+            path = s.pop()
+            vertex = path[-1]
+            # If it has not been visited...
+            if vertex not in visited_set:
+                if vertex == destination_vertex:
+                    return path
+                # Mark it as visited (print it and add it to the visited set)
+                print(vertex)
+                visited_set.add(vertex)
+                # Then push each of its neighbors in the stack
+                for neighbor in self.vertices[vertex]:
+                    new_path = list(path)
+                    new_path.append(neighbor)
+                    s.push(neighbor)
+        return None
 
 
 
