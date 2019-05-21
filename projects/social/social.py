@@ -77,9 +77,17 @@ class SocialGraph:
         Takes a user's userID as an argument
 
         Returns a dictionary containing every user in that user's
-        extended network with the shortest friendship path between them.
-
+        extended network with the shortest friendship path between them = BFS
+        
         The key is the friend's ID and the value is the path.
+        
+        EX: {1: {2, 4, 7}} Node with nodes it connects to
+        Returns: {2: [1, 5, 2], 4: [None], 7: [1, 10, 2, 7]}
+
+        Execution:
+            - BFS (finds shortest path) for each node in the set of connections
+            - the path that is returned is inserted into the `visited` dictionary as the value to the key (userID)
+        
         """
         visited = {}  # Note that this is a dictionary, not a set
         # !!!! IMPLEMENT ME
