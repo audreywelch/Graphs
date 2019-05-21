@@ -3,9 +3,9 @@ Simple graph implementation
 """
 from util import Stack, Queue  # These may come in handy
 
-# 1. Build your graph
+# 0. Translate HOW this is a graph problem - understand
+# 1. Build your graph 
 # 2. Traverse your graph
-# 3. 
 
 ## Part 1: Create a Graph Class
 class Graph:
@@ -148,13 +148,6 @@ class Graph:
         return None
 
 
-
-    """
-    Instead of storing just the nodes when you enque, you could enqueue the path.
-    OR everytime you visit a node, keep track of its parent. Then when you get to the destination, trace backwards.
-
-    """
-
     ## Implement Depth-First Search
     def dfs(self, starting_vertex, destination_vertex):
         """
@@ -168,17 +161,24 @@ class Graph:
         # Create an empty Visited set
         visited_set = set()
 
-        # Push the starting vertex to the stack
+        # Push the PATH TO the starting vertex to the stack
         s.push( [starting_vertex] )
 
         # While the Stack is not empty...
         while s.size() > 0:
+            # Pop the first PATH
             path = s.pop()
+
+            # Grab the last vertex of the PATH
             vertex = path[-1]
+
+            # Check if it's our destination
+            if vertex == destination_vertex:
+                return path
+
             # If it has not been visited...
             if vertex not in visited_set:
-                if vertex == destination_vertex:
-                    return path
+
                 # Mark it as visited (print it and add it to the visited set)
                 print(vertex)
                 visited_set.add(vertex)
@@ -186,7 +186,7 @@ class Graph:
                 for neighbor in self.vertices[vertex]:
                     new_path = list(path)
                     new_path.append(neighbor)
-                    s.push(neighbor)
+                    s.push(new_path)
         return None
 
 
