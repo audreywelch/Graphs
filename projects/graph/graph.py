@@ -4,7 +4,7 @@ Simple graph implementation
 from util import Stack, Queue  # These may come in handy
 
 # 1. Build your graph
-# 2. 
+# 2. Traverse your graph
 # 3. 
 
 ## Part 1: Create a Graph Class
@@ -112,35 +112,42 @@ class Graph:
         """
         # Create an empty Queue
         q = Queue()
-        
-        # enqueue A PATH TO the starting_vertex
-        q.enqueue([starting_vertex])
 
         # Create an empty visited set to store visited vertices
         visited_set = set()
+        
+        # enqueue A PATH TO the starting_vertex into the queue rather than storing just a vertex
+        q.enqueue( [starting_vertex] )
 
         # While the queue is not empty...
         while q.size() > 0:
             # Dequeue the first PATH from the front of the array
             path = q.dequeue()
 
-            # Grab the last vertex from the PATH
+            # Grab the last vertex of the PATH
             vertex = path[-1] # vertex is the last thing in the path array
+
+            # Check if vertex is the destination we're searching for
+            if vertex == destination_vertex:
+                # If so, return the path
+                return path
 
             # If it has not been visited...
             if vertex not in visited_set:
-                # Check if vertex is the destination we're searching for
-                if vertex == destination_vertex:
-                    return path
-                # Mark it as visited (print and add it to the visited set)
-                print(vertex)
+
+                # Mark it as visited (add it to the visited set)
                 visited_set.add(vertex)
-                # Then enqueue each of its neighbors in the queue
+                # Then enqueue each PATHS TO each of its neighbors in the queue
                 for neighbor in self.vertices[vertex]:
-                    new_path = list(path)
-                    new_path.append(neighbor)
-                    q.enqueue(neighbor)
+                    # Make a copy of the path, called new_path
+                    path_copy = list(path) # OR you can set it to path.copy()
+                    # Add the neighbor to the copy
+                    path_copy.append(neighbor)
+                    # Add the path copy to the queue
+                    q.enqueue(path_copy)
         return None
+
+
 
     """
     Instead of storing just the nodes when you enque, you could enqueue the path.
@@ -162,7 +169,7 @@ class Graph:
         visited_set = set()
 
         # Push the starting vertex to the stack
-        s.push([starting_vertex])
+        s.push( [starting_vertex] )
 
         # While the Stack is not empty...
         while s.size() > 0:
