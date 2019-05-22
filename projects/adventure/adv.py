@@ -1,3 +1,10 @@
+"""
+4 Parts:
+    - World generation code. Do not modify!
+    - Incomplete list of directions. Fill in with valid traversal directions
+    - Test code. Run the tests by typing in 
+"""
+
 from room import Room
 from player import Player
 from world import World
