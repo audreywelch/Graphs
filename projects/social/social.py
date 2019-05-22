@@ -3,6 +3,19 @@
 # We are looking for connected components
 import random
 
+class Queue():
+    def __init__(self):
+        self.queue = []
+    def enqueue(self, value):
+        self.queue.append(value)
+    def dequeue(self):
+        if self.size() > 0:
+            return self.queue.pop(0)
+        else:
+            return None
+    def size(self):
+        return len(self.queue)
+
 class User:
     def __init__(self, name):
         self.name = name
@@ -14,6 +27,8 @@ class SocialGraph:
         self.lastID = 0
         self.users = {} # Vertices - indexed by ID
         self.friendships = {} # Edges between users
+    def __repr__(self):
+        return self.friendships
 
     def addFriendship(self, userID, friendID):
         """
@@ -89,8 +104,61 @@ class SocialGraph:
             - the path that is returned is inserted into the `visited` dictionary as the value to the key (userID)
         
         """
+        # Create an empty queue
+        q = Queue()
+
+        # Create an empty set to store visited sets in order to keep track along the way
+        visited_set = set()
+
+        # Create an empty visited dictionary to store visited vertices and their paths
         visited = {}  # Note that this is a dictionary, not a set
-        # !!!! IMPLEMENT ME
+
+        # Get the values/friendships stored with each user
+        all_friendships = self.friendships[userID]
+        print(f'{all_friendships}')
+
+        # UserID is the starting vertex
+        # Friendship node is the target vertex
+
+        # Enqueue a path that starts at the starting_vertex into the queue
+        q.enqueue( [userID] )
+
+        # While the queue is not empty...
+        while q.size() > 0:
+
+            for each_friendship in self.friendships[userID]:
+
+                # Add the friendships to our final dictionary
+                visited.update({each_friendship:[]})
+                print(visited)
+
+                #Dequeue the first path from the front of the array
+                path = q.dequeue()
+
+                # Grab the last vertex of the path
+                v = path[-1]
+
+                # Check if v is the target
+                if v == each_friendship:
+                    # If v is the target AND the length of the path is less than the one currently in the dictionary:
+                    if len(path) < len(visited[each_friendship]):
+                        # Update the path in the dictionary
+                        visited.update(each_friendship = path)
+
+                # Check if in visited
+                if v not in visited_set:
+
+                    # Add the vertex to Visited
+                    visited_set.add(v)
+
+                    # Then enqueue each path to each of its neighbors in the queue
+                    path_copy = path.copy()
+                    path_copy.append(v)
+                    q.enqueue(path_copy)
+                    print(visited_set)
+                    print(q)
+        
+
         return visited
 
 
@@ -99,5 +167,5 @@ if __name__ == '__main__':
     sg.populateGraph(10, 2)
     print(sg.users)
     print(sg.friendships)
-    # connections = sg.getAllSocialPaths(1)
-    # print(connections)
+    connections = sg.getAllSocialPaths(2)
+    print(connections)
