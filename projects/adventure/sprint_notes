@@ -1,0 +1,59 @@
+# Every graph always starts at room 0 and at the coordinates (3, 5)
+
+# Do DFT until you get to a point where there is nothing unexplored around you. Then do a BFS to look for the closest room with an unexplored exit
+
+# Keep going until there are no more room with unexplored exits
+
+# DFS until stuck. Then search for the next room with unexplored rooms adjacent to it. Taking that to the extreme, at some point i've hit every room and i won't be able to find another room that has unexplored exits. That's the solution. Am I using BFS to basically go through every possible potential room and say whether or not it has an unexplored room, or do I do some sort of caching? BFS goes through every room and can't find another room without a question mark. 
+
+# Take a random DFS.
+
+# Hit a dead end
+
+# Now do BFS - do the exits have any exits? Keep going until you find a room that has unexplored exits. 
+
+# Now randomly go to one of those unexplored exits. Then we do BFS to go back to 1. You just need to return the traversal path that you ultimately walked. So the trick is "how do you append the path that you took to the traversal path that will be returned at the end"
+
+# Algorithm appends to the travel path as it runs. If doing a bunch of unneccessary movement in the algorithm, it will add to your travel path.
+
+# Your solution is adding to your travel path.
+
+# BFS back until you find a room with an unexplored exit
+
+## How to get to under 1000 moves?
+
+# Has to do with how we are choosing which exits to take? Which directions to travel in. Currently we are randomizing our choice. But if you do the loop first, then you do a dead end. Then if you do a depth first search up to the ones with dead ends.
+
+# When BFS can't find a question mark and returns None, that's when you know your traversal path is finished.
+
+# Start BFS from all dead ends.
+
+# You only have to log the path if you hit a question mark. If you don't hit one, don't log the path/move.
+
+# Our job is to find the shortest route. Searching doesn't cost us anything, except time. But searching is not moving. Because I've already drawn out my map. I'm just re-looking at the map i've created/drawn out.
+
+# Optimizing for steps taken, not "thinking/searching" time.
+
+# It's not searching for the rooms again... check if the size of your graph is the same size as the room graph. Once you hit that room size, you know youare finished. 
+
+# Built into our DFT is a BFS for going backwards
+
+# Time Complexity of DFS: O(n) > in this case 'n' would be number of rooms/vertices
+
+# For backtracking, we will have more than O(n) - it affects it by making its time complexity: n^2 (the second n is coming from the breadth first search if you are doing a binary search tree b/c it goes across each row. So if you are traversing it, as in visit every single node, it still has to be O(n) where n is the number of rooms)
+
+# Most amount of times you would ever have to backtrack into a single room (ignoring loops) would be 4 times - north, backtrack, west, backtrack, east, backtrack, then go south. should you ever need to go into a single room more than that? No. Worst case, performance of 4n. which is still O(n) so traversing the map should be an O(n) operation. O(n^2) comes when the number of times you backtrack becomes scaled according to the number of rooms you have - like if the number of rooms grows. maximum edges is 4. So that's why it comes out to just linear.
+
+# avg number of exits - some have 1, some have 4, so the avg is around 2. Which is why the most optimal traversals are around 1000 moves for 500 rooms.
+
+# Takeaway from linear - random number for 1, random number for 2, try to implement that friendship, add to the counter. Takeawawy is that randomness can help you get better performance, but downsides are with a very big graph. As working on this code: if you are getting stuck with map traversal, if running into bugs and you are using randomness, take out the randomness. If in a room with 4 question marks, instead of picking a random direction, always pick n first, then w, e, south. Once you have that working and you want to squeeze a little more performance, then try using randomness. 
+
+# Another tip is to keep your code organized. A lot of times students are getting the concepts, but it gets tricky because there are a lot of pieces to integrate.
+    - DFT
+    - integrate BFS part, that gives you a list of rooms.
+    - convert it into a list of directions.
+    - then traverse those directions.
+    - need multiple compoenents.
+    - turn exits into a dictionary with ?s.
+    - Need to look at previous room and current room, etc.
+        * The hard part is putting it all together. If one piece is missing or not working, it will completely mess you up. So that's why it's importnat to keep it organized. Write out the plan in pseudocode, breaking it up into 3 parts. DFS - looking for unexplored room. Backtracking, once hit dead end, return to room with unexplored exit. Then the loop this until we've traversed the entire map. Those are 3 good divisions. Test with small cases. If you can pass the first small map, the 2nd, the 3rd, then the big one should just work.

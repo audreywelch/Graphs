@@ -48,7 +48,7 @@ class Graph:
             # If it has not been visited...
             if first_vertex not in visited_set:
                 # Mark it as visited (print it and add it to the visited set)
-                print(first_vertex)
+                #print(first_vertex)
                 visited_set.add(first_vertex)
                 # Then enqueue each of its neighbors in the queue
                 for neighbor in self.vertices[first_vertex]:
