@@ -159,42 +159,49 @@ while len(graph) < len(roomGraph):
             # Set all exit values to '?' the first time visiting the room
             graph[currentRoomID][exit] = "?"
 
+    # Variable to hold the room's exit
+    #roomExit = None
+
     # if the currentRoomID IS in our graph, or was just added...
     # For each exit in the room's available exits
-    for exit in player.currentRoom.getExits():
-        # Set all exit values to '?' the first time visiting the room
-        graph[currentRoomID][exit] = "?"
+    for direction in graph[currentRoomID]:
+    #for exit in player.currentRoom.getExits():
 
-        # If there is an exit in the dictionary
-        if exit is not None: # because there might not be 's' or 'e' or something
+        if graph[currentRoomID][direction] == '?':
 
-            # Append our travel direction to traversalPath
-            traversalPath.append(exit)
-            # Move in that direction
-            player.travel(exit)
-            # Set our new room id to the room we just moved to
-            newRoomID = player.currentRoom.id
+            # Set the room's exit to the direction we are currently examining
+            roomExit = direction
 
-            # If the newRoomId is not in our graph yet...
-            if newRoomID not in graph:
+            # If there is an exit in the dictionary
+            if roomExit is not None: # because there might not be 's' or 'e' or something
 
-                # Put the room into our graph
-                graph[newRoomID] = {}
+                # Append our travel direction to traversalPath
+                traversalPath.append(roomExit)
+                # Move in that direction
+                player.travel(roomExit)
+                # Set our new room id to the room we just moved to
+                newRoomID = player.currentRoom.id
 
-                # Update previous room's direction/exit
-                graph[currentRoomID][exit] = newRoomID
-                # update current room's direction/exit to be opposite
-                graph[newRoomID][getOpposite(exit)] = currentRoomID
+                # If the newRoomId is not in our graph yet...
+                if newRoomID not in graph:
 
-                # For each exit in the room's available exits
-                for exit in player.currentRoom.getExits():
-                    # Set all exit values to '?' the first time visiting the room
-                    graph[newRoomID][exit] = '?'
+                    # Put the room into our graph
+                    graph[newRoomID] = {}
 
-                # Set the currentRoomID to now be the newRoomID
-                currentRoomID = newRoomID
+                    # For each exit in the room's available exits
+                    for exit in player.currentRoom.getExits():
+                        # Set all exit values to '?' the first time visiting the room
+                        graph[newRoomID][exit] = '?'
 
-                break
+        # Update previous room's direction/exit
+        graph[currentRoomID][roomExit] = newRoomID
+        # update current room's direction/exit to be opposite
+        graph[newRoomID][getOpposite(roomExit)] = currentRoomID
+
+        # Set the currentRoomID to now be the newRoomID
+        currentRoomID = newRoomID
+
+        break
 
     # Otherwise, if our roomID is already in the graph / we have visited it before
     # else:
@@ -206,20 +213,21 @@ while len(graph) < len(roomGraph):
 
     # Convert rooms to directions by traversing all rooms in the pathOfRooms and recording which direction was traveled
 
-    # For each room in the pathOfRooms
-    for room in pathOfRooms:
-        # For each {n, s, e, w} of each room in pathOfRooms
-        for exit in graph[currentRoomID]:
-            # print(f"{graph[currentRoomID]}")
-            # If the exit's value is the room in pathOfRooms
-            if graph[currentRoomID][exit] == room:
-                # Add this exit to our traversal
-                traversalPath.append(exit)
-                # Move in that direction
-                player.travel(exit)
+    if pathOfRooms is not None:
+        # For each room in the pathOfRooms
+        for room in pathOfRooms:
+            # For each {n, s, e, w} of each room in pathOfRooms
+            for exit in graph[currentRoomID]:
+                print(f"{graph[currentRoomID]}")
+                # If the exit's value is the room in pathOfRooms
+                if graph[currentRoomID][exit] == room:
+                    # Add this exit to our traversal
+                    traversalPath.append(exit)
+                    # Move in that direction
+                    player.travel(exit)
 
-        # Reset the currentRoomID to be the room we just traveled to
-        currentRoomID = player.currentRoom.id
+            # Reset the currentRoomID to be the room we just traveled to
+            currentRoomID = player.currentRoom.id
 
 
 
