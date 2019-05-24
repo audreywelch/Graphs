@@ -30,16 +30,16 @@ world.loadGraph(roomGraph) # passing in the roomGraph
 world.printRooms()
 
 player = Player("Name", world.startingRoom)
-player.travel('n')
-print(player.currentRoom.id)
-print(player.currentRoom.name)
-print(player.currentRoom.description)
-print(player.currentRoom.x)
-print(player.currentRoom.y)
-print(player.currentRoom.getExits())
-player.travel('n')
-print(player.currentRoom.id)
-print(player.currentRoom.getExits())
+# player.travel('n')
+# print(player.currentRoom.id)
+# print(player.currentRoom.name)
+# print(player.currentRoom.description)
+# print(player.currentRoom.x)
+# print(player.currentRoom.y)
+# print(player.currentRoom.getExits())
+# player.travel('n')
+# print(player.currentRoom.id)
+# print(player.currentRoom.getExits())
 
 
 traversalPath = []
@@ -74,68 +74,120 @@ class Stack():
     def size(self):
         return len(self.stack)
 
-def traversal():
-
+def mazeTraversal():
+    # Create a visited graph
+    # {0: {'n': '?', 's': '?', 'e': '?', 'w': '?'},
+    # {5: {'n': 0, 's': '?', 'e': '?', 'w': '?'}}
     graph = {}
-    
-    # While graph is smaller than 500
-    while len(graph) < len(roomGraph):
-        # Save the current room ID into a variable
-        currentRoomID = player.currentRoom.id
 
-        # if the currentRoomID is not in our graph yet...
+    # Save the current room ID into a variable
+    currentRoomID = player.currentRoom.id
+
+    # While the graph is smaller than 500
+    while len(graph) < len(roomGraph):
+
+        # if the currentRoomID is NOT in our graph yet...
         if currentRoomID not in graph:
 
             # Put the room into our graph with no exits yet
             graph[currentRoomID] = {}
 
-            # For each exit in the room's available exits
+            # For each exit the room has available
             for exit in player.currentRoom.getExits():
                 # Set all exit values to '?' the first time visiting the room
                 graph[currentRoomID][exit] = "?"
 
-                # If there is an exit in the dictinoary
-                if exit is not None: # because there might not be 's' or 'e' or something
+        # if the currentRoomID IS in our graph, or was just added...
+        # For each exit the room has available
+        for exit in player.currentRoom.getExits():
+            # If it has unvisited exits
+            if graph[currentRoomID][exit] == "?":
+                #DFT looks through all unexplored rooms while appending path
+                something = dft(graph)
 
-                    # Append our travel direction to traversalPath
-                    traversalPath.append(exit)
-                    # Move in that direction
-                    player.travel(exit)
-                    # Set our new room id to the room we just moved to
-                    newRoomID = player.currentRoom.id
+            # If it has NO unvisited exits
+                # BFS looks for closest path to a room that has an exit == '?'
 
-                    # If the newRoomId is not in our graph yet...
-                    if newRoomID not in graph:
+def dft(graph):
 
-                        # Put the room into our graph
-                        graph[newRoomID] = {}
+    # Save the current room ID into a variable
+    currentRoomID = player.currentRoom.id
 
-                        # Update previous room's direction/exit
-                        graph[currentRoomID][exit] = newRoomID
-                        # update current room's direction/exit to be opposite
-                        graph[newRoomID][getOpposite(exit)] = currentRoomID
+    # Create an empty stack and push the startingRoomID
+    s = Stack()
+    s.push(currentRoomID)
 
-                        # For each exit in the room's available exits
-                        for exit in player.currentRoom.getExits():
-                            # Set all exit values to '?' the first time visiting the room
-                            graph[newRoomID][exit] = '?'
+    # While the stack is not empty...
+    while s.size() > 0:
+        # Pop the first vertex/room
+        firstRoomID = s.pop()
 
-        # Otherwise, if our roomID is already in the graph / we have visited it before
-        elif currentRoomID in graph:
+        # For each possible exit the room contains
+        # for exit in firstRoomID.getExits():
+        # if 'n' in firstRoomID.getExits():
 
-            # For each exit in our room's value/dictionary
-            for exit in graph[currentRoomID]: # {'n': '?', 's': '?', 'e': '?', 'w': '?'}
+        # Check if 'n' exit has not been visited...
+        if graph[currentRoomID]['n'] is not None and graph[currentRoomID]['n'] == "?":
+            # Visit it by traveling there
+            player.travel('n')
+            # Append movement to traversalPath
+            traversalPath.append('n')
 
-                # If the key's value is still a question mark
-                if graph[currentRoomID][exit] == "?":
-                    return
-                    ## something
-                # If the key's value is not a question mark, it means
-                else:
-                    return
+            # Update the graph for the previous room
+            graph[firstRoomID]['n'] = player.currentRoom.id
+            # Update the graph for the current room
+            #graph[player.currentRoom.id]['s'] = firstRoomID
 
+            # Add the neighboring room / the room I've just moved into to the top of the stack
+            s.push(firstRoomID)
 
+        # Check if 's' exit has not been visited...
+        elif graph[currentRoomID]['s'] is not None and graph[currentRoomID]['s'] == "?":
+            # Visit it by traveling there
+            player.travel('s')
+            # Append movement to traversalPath
+            traversalPath.append('s')
 
+            # Update the graph for the previous room
+            graph[firstRoomID]['s'] = player.currentRoom.id
+            # Update the graph for the current room
+            graph[player.currentRoom.id]['n'] = firstRoomID
+
+            # Add the neighboring room / the room I've just moved into to the top of the stack
+            s.push(firstRoomID)
+
+        # Check if 'e' exit has not been visited...
+        elif graph[currentRoomID]['e'] is not None and graph[currentRoomID]['e'] == "?":
+            # Visit it by traveling there
+            player.travel('e')
+            # Append movement to traversalPath
+            traversalPath.append('e')
+
+            # Update the graph for the previous room
+            graph[firstRoomID]['e'] = player.currentRoom.id
+            # Update the graph for the current room
+            graph[player.currentRoom.id]['w'] = firstRoomID
+
+            # Add the neighboring room / the room I've just moved into to the top of the stack
+            s.push(firstRoomID)
+
+        # Check if 'w' exit has not been visited...
+        elif graph[currentRoomID]['w'] is not None and graph[currentRoomID]['w'] == "?":
+            # Visit it by traveling there
+            player.travel('w')
+            # Append movement to traversalPath
+            traversalPath.append('w')
+
+            # Update the graph for the previous room
+            graph[firstRoomID]['w'] = player.currentRoom.id
+            # Update the graph for the current room
+            graph[player.currentRoom.id]['e'] = firstRoomID
+
+            # Add the neighboring room / the room I've just moved into to the top of the stack
+            s.push(firstRoomID)
+
+    return graph
+        
 def getOpposite(direction):
     if direction == 'n':
         return 's'
@@ -144,9 +196,72 @@ def getOpposite(direction):
     elif direction == 'e':
         return 'w'
     elif direction == 'w':
-        return 'e'
-    else:
-        return None
+        return 'e'        
+
+
+# def traversal():
+
+#     graph = {}
+    
+#     # While graph is smaller than 500
+#     while len(graph) < len(roomGraph):
+#         # Save the current room ID into a variable
+#         currentRoomID = player.currentRoom.id
+
+#         # if the currentRoomID is not in our graph yet...
+#         if currentRoomID not in graph:
+
+#             # Put the room into our graph with no exits yet
+#             graph[currentRoomID] = {}
+
+#             # For each exit in the room's available exits
+#             for exit in player.currentRoom.getExits():
+#                 # Set all exit values to '?' the first time visiting the room
+#                 graph[currentRoomID][exit] = "?"
+
+#                 # If there is an exit in the dictionary
+#                 if exit is not None: # because there might not be 's' or 'e' or something
+
+#                     # Append our travel direction to traversalPath
+#                     traversalPath.append(exit)
+#                     # Move in that direction
+#                     player.travel(exit)
+#                     # Set our new room id to the room we just moved to
+#                     newRoomID = player.currentRoom.id
+
+#                     # If the newRoomId is not in our graph yet...
+#                     if newRoomID not in graph:
+
+#                         # Put the room into our graph
+#                         graph[newRoomID] = {}
+
+#                         # Update previous room's direction/exit
+#                         graph[currentRoomID][exit] = newRoomID
+#                         # update current room's direction/exit to be opposite
+#                         graph[newRoomID][getOpposite(exit)] = currentRoomID
+
+#                         # For each exit in the room's available exits
+#                         for exit in player.currentRoom.getExits():
+#                             # Set all exit values to '?' the first time visiting the room
+#                             graph[newRoomID][exit] = '?'
+
+#         # Otherwise, if our roomID is already in the graph / we have visited it before
+#         elif currentRoomID in graph:
+
+#             # For each exit in our room's value/dictionary
+#             for exit in graph[currentRoomID]: # {'n': '?', 's': '?', 'e': '?', 'w': '?'}
+
+#                 # If the key's value is still a question mark
+#                 if graph[currentRoomID][exit] == "?":
+#                     return
+#                     ## something
+#                 # If the key's value is not a question mark, it means
+#                 else:
+#                     return
+
+
+
+
 
 
 
@@ -157,8 +272,12 @@ player.currentRoom = world.startingRoom
 room = player.currentRoom
 visited_rooms.add(player.currentRoom)
 
-print(traversal())
+## ------ ##
+
+print(mazeTraversal())
 print(f'traversal path is: {traversalPath}')
+
+## ------ ##
 
 for move in traversalPath:
     player.travel(move)
@@ -184,24 +303,26 @@ else:
 #         print("I did not understand that command.")
 
 
-def mazeTraversal(graph, startingRoom):
-    # Create a visited graph
-    # {0: {'n': '?', 's': '?', 'e': '?', 'w': '?'},
-    # {5: {'n': 0, 's': '?', 'e': '?', 'w': '?'}}
-    visited_graph = {}
+# def mazeTraversal(graph, startingRoom):
+#     # Create a visited graph
+#     # {0: {'n': '?', 's': '?', 'e': '?', 'w': '?'},
+#     # {5: {'n': 0, 's': '?', 'e': '?', 'w': '?'}}
+#     graph = {}
     
-    # Create an empty stack and push the startingRoomID
-    s = Stack()
-    s.push(startingRoom)
+#     # Create an empty stack and push the startingRoomID
+#     s = Stack()
+#     s.push(player.currentRoom.id)
 
-    # While the stack is not empty...
-    while s.size() > 0:
-        # Pop the first vertex/room
-        room = s.pop()
+#     # While the graph is smaller than 500
+#     while len(graph) < len(roomGraph):
+#     # While the stack is not empty...
+#     while s.size() > 0:
+#         # Pop the first vertex/room
+#         room = s.pop()
 
-        # If that room has not been visited...
-        if room not in visited:
-            visited.add(room)
+#         # If that room has not been visited...
+#         if room not in visited:
+#             visited.add(room)
 
-            # Add all neighboring rooms to the top of the stack
-            # I can find if a room has a neighbor by its exits
+#             # Add all neighboring rooms to the top of the stack
+#             # I can find if a room has a neighbor by its exits
