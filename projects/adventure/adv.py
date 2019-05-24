@@ -42,18 +42,111 @@ print(player.currentRoom.id)
 print(player.currentRoom.getExits())
 
 
-
 traversalPath = []
 # ^^ This is what hits every room in the map
 # Write a function that returns a traversalPath that passes the tests
 
+## Underlying Data Structures
 
-def mazeTraversal(graph):
-    # Create a visited graph
-    # {0: {'n': '?', 's': '?', 'e': '?', 'w': '?'},
-    # {5: {'n': 0, 's': '?', 'e': '?', 'w': '?'}}
-    visited = {}
+class Queue():
+    def __init__(self):
+        self.queue = []
+    def enqueue(self, value):
+        self.queue.append(value)
+    def dequeue(self):
+        if self.size() > 0:
+            return self.queue.pop(0)
+        else:
+            return None
+    def size(self):
+        return len(self.queue)
 
+class Stack():
+    def __init__(self):
+        self.stack = []
+    def push(self, value):
+        self.stack.append(value)
+    def pop(self):
+        if self.size() > 0:
+            return self.stack.pop()
+        else:
+            return None
+    def size(self):
+        return len(self.stack)
+
+def traversal():
+
+    graph = {}
+    
+    # While graph is smaller than 500
+    while len(graph) < len(roomGraph):
+        # Save the current room ID into a variable
+        currentRoomID = player.currentRoom.id
+
+        # if the currentRoomID is not in our graph yet...
+        if currentRoomID not in graph:
+
+            # Put the room into our graph with no exits yet
+            graph[currentRoomID] = {}
+
+            # For each exit in the room's available exits
+            for exit in player.currentRoom.getExits():
+                # Set all exit values to '?' the first time visiting the room
+                graph[currentRoomID][exit] = "?"
+
+                # If there is an exit in the dictinoary
+                if exit is not None: # because there might not be 's' or 'e' or something
+
+                    # Append our travel direction to traversalPath
+                    traversalPath.append(exit)
+                    # Move in that direction
+                    player.travel(exit)
+                    # Set our new room id to the room we just moved to
+                    newRoomID = player.currentRoom.id
+
+                    # If the newRoomId is not in our graph yet...
+                    if newRoomID not in graph:
+
+                        # Put the room into our graph
+                        graph[newRoomID] = {}
+
+                        # Update previous room's direction/exit
+                        graph[currentRoomID][exit] = newRoomID
+                        # update current room's direction/exit to be opposite
+                        graph[newRoomID][getOpposite(exit)] = currentRoomID
+
+                        # For each exit in the room's available exits
+                        for exit in player.currentRoom.getExits():
+                            # Set all exit values to '?' the first time visiting the room
+                            graph[newRoomID][exit] = '?'
+
+        # Otherwise, if our roomID is already in the graph / we have visited it before
+        elif currentRoomID in graph:
+
+            # For each exit in our room's value/dictionary
+            for exit in graph[currentRoomID]: # {'n': '?', 's': '?', 'e': '?', 'w': '?'}
+
+                # If the key's value is still a question mark
+                if graph[currentRoomID][exit] == "?":
+                    return
+                    ## something
+                # If the key's value is not a question mark, it means
+                else:
+                    return
+
+
+
+def getOpposite(direction):
+    if direction == 'n':
+        return 's'
+    elif direction == 's':
+        return 'n'
+    elif direction == 'e':
+        return 'w'
+    elif direction == 'w':
+        return 'e'
+    else:
+        return None
 
 
 
@@ -61,7 +154,11 @@ def mazeTraversal(graph):
 # TRAVERSAL TEST
 visited_rooms = set()
 player.currentRoom = world.startingRoom
+room = player.currentRoom
 visited_rooms.add(player.currentRoom)
+
+print(traversal())
+print(f'traversal path is: {traversalPath}')
 
 for move in traversalPath:
     player.travel(move)
@@ -85,3 +182,26 @@ else:
 #         player.travel(cmds[0], True)
 #     else:
 #         print("I did not understand that command.")
+
+
+def mazeTraversal(graph, startingRoom):
+    # Create a visited graph
+    # {0: {'n': '?', 's': '?', 'e': '?', 'w': '?'},
+    # {5: {'n': 0, 's': '?', 'e': '?', 'w': '?'}}
+    visited_graph = {}
+    
+    # Create an empty stack and push the startingRoomID
+    s = Stack()
+    s.push(startingRoom)
+
+    # While the stack is not empty...
+    while s.size() > 0:
+        # Pop the first vertex/room
+        room = s.pop()
+
+        # If that room has not been visited...
+        if room not in visited:
+            visited.add(room)
+
+            # Add all neighboring rooms to the top of the stack
+            # I can find if a room has a neighbor by its exits

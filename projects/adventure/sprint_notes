@@ -53,7 +53,147 @@
     - integrate BFS part, that gives you a list of rooms.
     - convert it into a list of directions.
     - then traverse those directions.
-    - need multiple compoenents.
+    - need multiple components.
     - turn exits into a dictionary with ?s.
     - Need to look at previous room and current room, etc.
         * The hard part is putting it all together. If one piece is missing or not working, it will completely mess you up. So that's why it's importnat to keep it organized. Write out the plan in pseudocode, breaking it up into 3 parts. DFS - looking for unexplored room. Backtracking, once hit dead end, return to room with unexplored exit. Then the loop this until we've traversed the entire map. Those are 3 good divisions. Test with small cases. If you can pass the first small map, the 2nd, the 3rd, then the big one should just work.
+
+
+PLAN:
+- DFT until I reach a room with no unexplored exits
+- BFS back until I reach a room with an unexplored exit
+For reference:
+# room.name = 'Room 1'
+# room.id = 1 -> from printing stuff earlier
+# room.description = (x, y)
+
+  # While our graph is smaller than 500
+  while len(graph) < len(roomGraph):
+    # Save the current room ID into a variable
+    currentRoomID = player.currentRoom.id
+
+    # If the currentRoomId is not in our graph yet...
+    if currentRoomID not in graph:
+
+      # Put the room into our graph with no exits yet
+      graph[currentRoomID] = {}
+
+      # For each exit in the room's available exits
+      for exit in player.currentRoom.getExits():
+        # Set all exit values to '?' the first time visiting the room
+        graph[currentRoomID][exit] = "?"
+
+        # If there is an exit in the dictionary
+        if exit is not None: # because there might not even be 's' or 'e' or something
+          
+          # Append our travel direction to traversalPath
+          traversalPath.append(exit)
+          # Move in that direction
+          player.travel(exit)
+          # Set our new room id to the room we just moved to
+          newRoomID = player.currentRoom.id
+
+          # If the newRoomId is not in our graph yet...
+          if newRoomID not in graph:
+
+            # Put the room into our graph
+            graph[newRoomID] = {}
+
+           # hold on! i have to go eat dinner! i'll be back in a while! okay, bye.
+            graph[currentRoomID][exit] = newRoomID
+
+            # should this be 'update' ?
+            # And update the 'exit' we just took into the graph for our old room id
+            # because it still says {0: 'exit' = '?'}
+            graph[currentRoomID][exit] = newRoomID. # okay, so then, we need to do this earlier. because this is still for room 0. We just need to update that 'north' of 0 is this newRoomID that we entered.
+            # and then we do what you're saying.
+            # the newRoomID: 's' = oldRoomID
+             # this is should be opposite direction like we enter "n" and need to set nemRoomID "s"
+            
+            
+            # For each exit in the room's available exits
+            for exit in player.currentRoom.getExits():
+              # Set all exit values to '?' the first time visiting the room
+              graph[newRoomID][exit] = "?"
+    
+        
+    # Otherwise, if our roomID is already in the graph / we have visited it before
+    elif currentRoomID in graph:
+
+      # For each exit in our room's value/dictionary
+      for exit in graph[currentRoom]: # {'n': '?', 's': '?', 'e': '?', 'w': '?'}
+        
+        # If the key's value is still a question mark
+        if graph[currentRoom][exit] == '?':
+          ## something
+        
+        # If the key's value is not a question mark, it means 
+        else:
+          
+          
+      
+      ## NOTES
+      # Each time we traverse
+        ## if roomID is in our graph (this means we've already visited it)
+          ## exitsArray = graph[roomID]
+          for exit in graph[currentRoom]: # {'n': '?', 'e': '?', 'w': '?'}
+            if graph[currentRoom][exit] == '?':
+              # 
+              
+        ## else:
+          ## call getExits() - ['n', 's']
+
+
+          ## loop through getExit array to see how many 
+          for exit in getExitArray:
+              if graph[currentRoomID][exit] == '?':
+                  # if matches, we have NOT been there (?)
+                      if new room, make all ?s
+                      if not, change the ? to the direction value
+                  # otherwise, we HAVE been there
+        
+        ## add all of these exits into our dictionary by setting ?s as their values
+        
+        ## Add room we have moved to into our dictionary
+        ## Update {0: {'n': '?', 's': '?', 'e': '?', 'w': '?'}
+        ## {5: {'n': 0, 's': '?', 'e': '?', 'w': '?'}}
+        ## Add the direction we traversed to the traversalPath
+        ## Check if there are rooms we haven't explored
+
+
+        --------------------
+
+        First ideas
+
+        """
+PLAN:
+- DFT until I reach a room with no unexplored exits
+    # Each time we traverse
+        ## if roomID is in our graph (this means we've already visited it)
+        ## call getExits() - ['n', 's']
+        ## loop through getExit array
+        for exit in getExitArray:
+            if graph[currentRoomID][exit] == '?':
+                # if matches, we have NOT been there (?)
+                    if new room, make all ?s
+                    if not, change the ? to the direction value
+                # otherwise, we HAVE been there
+         
+        ## add all of these exits into our dictionary by setting ?s as their values
+        
+        ## Add room we have moved to into our dictionary
+        ## Update {0: {'n': '?', 's': '?', 'e': '?', 'w': '?'}
+        ## {5: {'n': 0, 's': '?', 'e': '?', 'w': '?'}}
+        ## Add the direction we traversed to the traversalPath
+        ## Check if there are rooms we haven't explored
+    
+- BFS back until I reach a room with an unexplored exit
+
+get_neighboring_rooms(vertex, graph):
+    previousRoomID = currentRoom.id
+
+    if I can move North: #OR if self.exits contains 'n' ??
+        travel('n')
+        visited.add(previousRoomID: {'n': self.room.id})
+    else:
+        BFS to find closest room with an unexplored exit
