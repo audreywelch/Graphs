@@ -160,7 +160,7 @@ while len(graph) < len(roomGraph):
             graph[currentRoomID][exit] = "?"
 
     # Variable to hold the room's exit
-    #roomExit = None
+    roomExit = None
 
     # if the currentRoomID IS in our graph, or was just added...
     # For each exit in the room's available exits
