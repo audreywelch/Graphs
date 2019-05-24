@@ -160,6 +160,13 @@ For reference:
         ## Add the direction we traversed to the traversalPath
         ## Check if there are rooms we haven't explored
 
+        ## This is where we need to do BFS to find the closestroom with unexplored exits
+        # BFS path  - you can use the same structure in the algorithm.
+        # 1. if current node == target node: return the path, but in this case we are looking for an unexplored exit
+        # 2. When you get a path, it gives you a list of the rooms (102, 107, 105) - that is not what you need to traverse. that is the order of rooms. but we need code to change the list of rooms to a list of directions. return path of rooms (list of numbers). then write another code, that looks at room graph and converts room numbers into directions. almost always easier to break up into parts instead of mixing. walk along list of directions and append to original path.
+        # 3. Loops - when you get into a loop, you might run into some bugs. Test it on the second to last sample graph, it has a loop in it.
+        # if direction == n, return s
+        # left is a key, north is a value
 
         --------------------
 
