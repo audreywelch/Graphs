@@ -134,18 +134,10 @@ def bfs(graph, starting_room):
                 # Add the path we took to the back of the queue
                 q.enqueue(path_copy)
     
-    # Don't need to return anything because 
+    # Don't need to return anything because I am setting the results of this to a variable
     return None
-                
 
-
-
-
-
-
-    
     # TRICKY PARTS
-        # 1. if current node == target node: return the path, but in this case we are looking for an unexplored exit
         # 2. When you get a path, it gives you a list of the rooms (102, 107, 105) - that is not what you need to traverse. that is the order of rooms. but we need code to change the list of rooms to a list of directions. return path of rooms (list of numbers). then write another code, that looks at room graph and converts room numbers into directions. almost always easier to break up into parts instead of mixing. walk along list of directions and append to original path.
         # 3. Loops - when you get into a loop, you might run into some bugs. Test it on the second to last sample graph, it has a loop in it.
         # if direction == n, return s
@@ -199,22 +191,31 @@ while len(graph) < len(roomGraph):
                     break
 
     # Otherwise, if our roomID is already in the graph / we have visited it before
-    else:
+    # else:
     #elif currentRoomID in graph:
 
-        bfs_path_results = bfs()
+    # Run a BFS, passing in my graph and the room I am currently in
+    pathOfRooms = bfs(graph, player.currentRoom.id)
+    print(pathOfRooms)
+
+    # Convert rooms to directions by traversing all rooms in the pathOfRooms and recording which direction was traveled
+
+    # For each room in the pathOfRooms
+    for room in pathOfRooms:
+        # For each {n, s, e, w} of each room in pathOfRooms
+        for exit in graph[currentRoomID]:
+            # print(f"{graph[currentRoomID]}")
+            # If the exit's value is the room in pathOfRooms
+            if graph[currentRoomID][exit] == room:
+                # Add this exit to our traversal
+                traversalPath.append(exit)
+                # Move in that direction
+                player.travel(exit)
+
+        # Reset the currentRoomID to be the room we just traveled to
+        currentRoomID = player.currentRoom.id
 
 
-        # For each exit in our room's value/dictionary
-        for exit in graph[currentRoomID]: # {'n': '?', 's': '?', 'e': '?', 'w': '?'}
-
-            # If the key's value is still a question mark
-            if graph[currentRoomID][exit] == "?":
-                break
-                ## something
-            # If the key's value is not a question mark, it means
-            else:
-                break
 
 
 
